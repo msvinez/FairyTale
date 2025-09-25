@@ -1,0 +1,182 @@
+/* Підключення шрифту */
+@import url('https://fonts.googleapis.com/css2?family=Kurale&display=swap');
+
+/* =================================== */
+/* ЗАГАЛЬНІ СТИЛІ                     */
+/* =================================== */
+/* ЗАГАЛЬНІ СТИЛІ */
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('img/wood.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Kurale', serif;
+    color: #3b3228;
+    overflow: hidden; /* <-- Ось цей рядок все виправить */
+}
+
+/* Затемнення по краях екрану */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(40, 30, 10, 0.1) 0%, rgba(0, 0, 0, 0.9) 75%);
+    pointer-events: none;
+}
+
+/* =================================== */
+/* СТРУКТУРА КНИГИ                   */
+/* =================================== */
+.book-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.book {
+    width: 1110px;
+    height: 765px;
+    position: relative;
+    perspective: 2500px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.page {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: url('img/page.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #d3c8b4;
+    transform-origin: left;
+    transform-style: preserve-3d;
+    transition: transform 0.7s ease-in-out;
+    border-radius: 15px;
+    will-change: transform;
+}
+
+.flipped {
+    transform: rotateY(-180deg);
+}
+
+.front,
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    /* Центруємо весь контент (і текст, і картинки) за замовчуванням */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.front {
+    z-index: 1;
+}
+
+.back {
+    transform: rotateY(180deg);
+}
+
+/* =================================== */
+/* КОНТЕНТ СТОРІНОК                  */
+/* =================================== */
+
+/* --- Текст --- */
+/* Налаштування для блоків з текстом */
+.page:not(.cover):not(.cover-back) .front {
+    flex-direction: column;
+    text-align: left;
+}
+
+.front h2 {
+    color: #5a4836;
+    font-size: 3.4em;
+}
+
+.front p {
+    line-height: 1.5;
+    color: #3b3228;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+/* Перша літера-буквиця */
+.page:not(.cover) .front p::first-letter {
+    color: #b22222;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1;
+    padding-right: 1px;
+}
+
+
+/* --- Ілюстрації --- */
+
+/* Застосовуємо заокруглення та ефект згасання до ВСІХ зображень */
+.page img {
+    border-radius: 20px;
+    overflow: hidden;
+    transform: translateZ(0);
+    -webkit-mask-image: radial-gradient(ellipse 70% 85% at center, black 60%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 85% at center, black 60%, transparent 100%);
+}
+
+/* Загальний стиль для розміру ілюстрацій */
+.front img,
+.back img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Спеціальні стилі для головної обкладинки */
+.page.cover .front {
+    padding: 0;
+    border-radius: 15px;
+    /* Повторюємо заокруглення батьківського елемента */
+    overflow: hidden;
+    /* Обрізаємо гострі кути зображення обкладинки */
+}
+
+/* Скасовуємо ефекти ТІЛЬКИ для головної обкладинки */
+.page.cover .front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+/* =================================== */
+/* НАВІГАЦІЯ                         */
+/* =================================== */
+button {
+    border: none;
+    background: transparent;
+    font-size: 2rem;
+    color: #e0dcd1;
+    cursor: pointer;
+    padding: 0 20px;
+    transition: transform 0.2s, color 0.2s;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+button:hover {
+    transform: scale(1.2);
+    color: #fff;
+}
