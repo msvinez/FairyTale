@@ -74,4 +74,4 @@ function goPrevPage() {
     pageToUnflip.classList.remove('flipped');
 
     updateBookState();
-}
+} 
