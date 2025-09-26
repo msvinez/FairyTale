@@ -4,7 +4,7 @@
 /* =================================== */
 /* ЗАГАЛЬНІ СТИЛІ                     */
 /* =================================== */
-/* ЗАГАЛЬНІ СТИЛІ */
+
 body {
     margin: 0;
     height: 100vh;
@@ -42,12 +42,16 @@ body::after {
 }
 
 .book {
-    width: 90vw; /* Займатиме 90% ширини екрану */
-    max-width: 1110px; /* Але не більше ніж 1110px на великих екранах */
-    aspect-ratio: 1110 / 765; /* Автоматично підтримує пропорції */
+    width: 1110px;
+    height: 765px;
     position: relative;
     perspective: 2500px;
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.5s ease-in-out;
+}
+
+.book.closed {
+    box-shadow: none;
 }
 
 .page {
@@ -104,22 +108,20 @@ body::after {
     text-align: left;
 }
 
-.front h2 {
+h2 {
     color: #5a4836;
-    /* Мін. 1.5rem, бажаний 4vw, макс. 3.4rem */
-    font-size: clamp(1.5rem, 4vw, 3.4rem);
+    font-size: 3.4em;
 }
 
-.front p {
+p {
     line-height: 1.5;
     color: #3b3228;
-    /* Мін. 0.8rem, бажаний 2vw, макс. 1.5rem */
-    font-size: clamp(0.8rem, 2vw, 1.5rem);
+    font-size: 1.5em;
     font-weight: 600;
 }
 
 /* Перша літера-буквиця */
-.page:not(.cover) .front p::first-letter {
+h2::first-letter, p::first-letter {
     color: #b22222;
     font-size: 2em;
     font-weight: bold;
@@ -182,43 +184,4 @@ button {
 button:hover {
     transform: scale(1.2);
     color: #fff;
-
-}
-
-/* =================================== */
-/* АДАПТАЦІЯ ДЛЯ МОБІЛЬНИХ           */
-/* =================================== */
-@media (max-width: 768px) {
-    .book-container {
-        /* Розміщуємо елементи в сітці для кращого контролю */
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Дві колонки однакової ширини */
-        grid-template-rows: auto auto; /* Два рядки, висота по контенту */
-        gap: 1rem;
-        width: 100%;
-        padding: 1rem 0;
-    }
-
-    .book {
-        grid-column: 1 / 3; /* Книга займає 2 колонки (весь рядок) */
-        grid-row: 1; /* і знаходиться в першому рядку */
-        width: 95vw; /* На мобільних книга майже на весь екран */
-    }
-
-    #prev-btn {
-        grid-column: 1; /* Ліва кнопка в першій колонці */
-        grid-row: 2; /* і в другому рядку */
-        justify-self: center; /* Центруємо її */
-    }
-
-    #next-btn {
-        grid-column: 2; /* Права кнопка в другій колонці */
-        grid-row: 2; /* і в другому рядку */
-        justify-self: center; /* Центруємо її */
-    }
-
-    /* Зменшимо текст на кнопках, щоб точно помістився */
-    button {
-        font-size: 1.5rem;
-    }
 }
