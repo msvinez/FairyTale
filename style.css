@@ -16,7 +16,7 @@ body {
     background-position: center;
     font-family: 'Kurale', serif;
     color: #3b3228;
-    overflow: hidden; /* <-- Ось цей рядок все виправить */
+    overflow: hidden;
 }
 
 /* Затемнення по краях екрану */
@@ -37,17 +37,26 @@ body::after {
 .book-container {
     display: flex;
     align-items: center;
+    justify-content: center; /* Додано для кращого центрування */
     position: relative;
     z-index: 10;
+    width: 100%; /* Дозволяє контейнеру займати всю ширину */
+    padding: 15px; /* Додає відступи на маленьких екранах */
+    box-sizing: border-box;
 }
 
 .book {
-    width: 1110px;
-    height: 765px;
+    /* --- ЗМІНЕНО: робимо розміри адаптивними --- */
+    max-width: 1110px;          /* Максимальна ширина, як в оригіналі */
+    width: 85vw;                /* Ширина відносно екрану (viewport width) */
+    aspect-ratio: 1110 / 765;   /* Зберігаємо пропорції книги */
+    /* width: 1110px; <-- ВИДАЛЕНО */
+    /* height: 765px; <-- ВИДАЛЕНО */
+
     position: relative;
     perspective: 2500px;
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.5s ease-in-out;
+    transition: box-shadow 0.5s ease-in-out, width 0.5s ease-in-out; /* Плавна зміна ширини */
 }
 
 .book.closed {
@@ -83,7 +92,6 @@ body::after {
     padding: 20px 30px;
     box-sizing: border-box;
     backface-visibility: hidden;
-    /* Центруємо весь контент (і текст, і картинки) за замовчуванням */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,8 +109,6 @@ body::after {
 /* КОНТЕНТ СТОРІНОК                  */
 /* =================================== */
 
-/* --- Текст --- */
-/* Налаштування для блоків з текстом */
 .page:not(.cover):not(.cover-back) .front {
     flex-direction: column;
     text-align: left;
@@ -120,7 +126,6 @@ p {
     font-weight: 600;
 }
 
-/* Перша літера-буквиця */
 h2::first-letter, p::first-letter {
     color: #b22222;
     font-size: 2em;
@@ -129,10 +134,6 @@ h2::first-letter, p::first-letter {
     padding-right: 1px;
 }
 
-
-/* --- Ілюстрації --- */
-
-/* Застосовуємо заокруглення та ефект згасання до ВСІХ зображень */
 .page img {
     border-radius: 20px;
     overflow: hidden;
@@ -141,23 +142,18 @@ h2::first-letter, p::first-letter {
     mask-image: radial-gradient(ellipse 70% 85% at center, black 60%, transparent 100%);
 }
 
-/* Загальний стиль для розміру ілюстрацій */
 .front img,
 .back img {
     max-width: 100%;
     max-height: 100%;
 }
 
-/* Спеціальні стилі для головної обкладинки */
 .page.cover .front {
     padding: 0;
     border-radius: 15px;
-    /* Повторюємо заокруглення батьківського елемента */
     overflow: hidden;
-    /* Обрізаємо гострі кути зображення обкладинки */
 }
 
-/* Скасовуємо ефекти ТІЛЬКИ для головної обкладинки */
 .page.cover .front img {
     width: 100%;
     height: 100%;
@@ -177,8 +173,9 @@ button {
     color: #e0dcd1;
     cursor: pointer;
     padding: 0 20px;
-    transition: transform 0.2s, color 0.2s, opacity 0.3s ease-in-out; /* <-- Змінено тут */
+    transition: transform 0.2s, color 0.2s, opacity 0.3s ease-in-out;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 20; /* Щоб кнопки були над тінню */
 }
 
 button:hover {
@@ -187,6 +184,61 @@ button:hover {
 }
 
 .hidden {
-    opacity: 0; /* Робить елемент повністю прозорим */
-    pointer-events: none; /* Забороняє клікати на невидимий елемент */
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* =================================== */
+/* --- АДАПТИВНІСТЬ (RESPONSIVENESS) --- */
+/* =================================== */
+
+/* --- Планшети --- */
+@media (max-width: 1200px) {
+    .book {
+        width: 90vw; /* Збільшуємо відносну ширину на середніх екранах */
+        perspective: 2000px;
+    }
+    p {
+        font-size: 1.3em;
+    }
+}
+
+/* --- Мобільні телефони --- */
+@media (max-width: 768px) {
+    .book-container {
+        flex-wrap: wrap;       /* Дозволяємо елементам переноситись на новий рядок */
+        gap: 20px;             /* Створюємо простір між книгою та кнопками */
+    }
+
+    .book {
+        width: 95vw;           /* Книга майже на всю ширину */
+        order: 1;              /* Книга завжди перша */
+        flex-basis: 100%;      /* Змушує книгу зайняти весь рядок, виштовхуючи кнопки вниз */
+        perspective: 1500px;
+    }
+
+    #prev-btn {
+        order: 2; /* Кнопка "назад" йде другою */
+    }
+    #next-btn {
+        order: 3; /* Кнопка "вперед" - третьою */
+    }
+    
+    button {
+        font-size: 2.5rem; /* Збільшуємо кнопки для зручності на дотик */
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 2em;
+    }
+
+    p {
+        font-size: 1em; /* Зменшуємо текст для читабельності */
+        line-height: 1.4;
+    }
+
+    .front, .back {
+        padding: 15px; /* Зменшуємо внутрішні відступи сторінок */
+    }
 }
