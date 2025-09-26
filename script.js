@@ -11,12 +11,27 @@ let currentPage = 1;
 // Лічильник для z-index
 let zIndexCounter = numPages;
 
-// --- НОВА ФУНКЦІЯ для керування тінню ---
+// --- ОНОВЛЕНА ФУНКЦІЯ для керування станом книги ---
 function updateBookState() {
+    // Керування тінню
     if (currentPage === 1 || currentPage > numPages) {
         book.classList.add('closed');
     } else {
         book.classList.remove('closed');
+    }
+
+    // --- НОВИЙ КОД: Керування кнопкою "Назад" ---
+    if (currentPage === 1) {
+        prevBtn.classList.add('hidden');
+    } else {
+        prevBtn.classList.remove('hidden');
+    }
+
+    // --- НОВИЙ КОД: Керування кнопкою "Вперед" ---
+    if (currentPage > numPages) {
+        nextBtn.classList.add('hidden');
+    } else {
+        nextBtn.classList.remove('hidden');
     }
 }
 
@@ -29,12 +44,11 @@ pages.forEach((page, index) => {
 nextBtn.addEventListener('click', goNextPage);
 prevBtn.addEventListener('click', goPrevPage);
 
-// --- ВИКЛИКАЄМО ФУНКЦІЮ ПРИ ЗАВАНТАЖЕННІ ---
+// Викликаємо функцію при завантаженні для налаштування початкового стану
 updateBookState();
 
 
 function goNextPage() {
-    // Перевіряємо, чи не остання це сторінка
     if (currentPage > numPages) {
         return;
     }
@@ -45,12 +59,10 @@ function goNextPage() {
     pageToFlip.classList.add('flipped');
     currentPage++;
     
-    // --- ОНОВЛЮЄМО СТАН КНИГИ ---
     updateBookState();
 }
 
 function goPrevPage() {
-    // Перевіряємо, чи не перша це сторінка
     if (currentPage <= 1) {
         return;
     }
@@ -61,6 +73,5 @@ function goPrevPage() {
     pageToUnflip.style.zIndex = zIndexCounter;
     pageToUnflip.classList.remove('flipped');
 
-    // --- ОНОВЛЮЄМО СТАН КНИГИ ---
     updateBookState();
 }
