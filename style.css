@@ -177,11 +177,16 @@ button {
     color: #e0dcd1;
     cursor: pointer;
     padding: 0 20px;
-    transition: transform 0.2s, color 0.2s;
+    transition: transform 0.2s, color 0.2s, opacity 0.3s ease-in-out; /* <-- Змінено тут */
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 button:hover {
     transform: scale(1.2);
     color: #fff;
+}
+
+.hidden {
+    opacity: 0; /* Робить елемент повністю прозорим */
+    pointer-events: none; /* Забороняє клікати на невидимий елемент */
 }
