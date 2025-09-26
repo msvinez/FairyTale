@@ -1,88 +1,66 @@
 // Отримуємо посилання на елементи DOM
-
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const book = document.getElementById('book');
 const pages = document.querySelectorAll('.page');
 
 // Змінні для відстеження стану книги
-
 const numPages = pages.length;
 let currentPage = 1;
 
-// Лічильник для z-index, щоб кожна наступна дія була поверх попередньої
+// Лічильник для z-index
+let zIndexCounter = numPages;
 
-let zIndexCounter = numPages; 
+// --- НОВА ФУНКЦІЯ для керування тінню ---
+function updateBookState() {
+    if (currentPage === 1 || currentPage > numPages) {
+        book.classList.add('closed');
+    } else {
+        book.classList.remove('closed');
+    }
+}
 
 // Встановлюємо початкові z-index для сторінок
-
 pages.forEach((page, index) => {
     page.style.zIndex = numPages - index;
 });
 
 // Обробники подій для кнопок
-
 nextBtn.addEventListener('click', goNextPage);
 prevBtn.addEventListener('click', goPrevPage);
 
+// --- ВИКЛИКАЄМО ФУНКЦІЮ ПРИ ЗАВАНТАЖЕННІ ---
+updateBookState();
 
 
 function goNextPage() {
+    // Перевіряємо, чи не остання це сторінка
+    if (currentPage > numPages) {
+        return;
+    }
 
-// Перевіряємо, чи не остання це сторінка (саму задню обкладинку гортати не можна)
-
-if (currentPage > numPages) {
-    return;
+    const pageToFlip = document.getElementById(`p${currentPage}`);
+    zIndexCounter++;
+    pageToFlip.style.zIndex = zIndexCounter;
+    pageToFlip.classList.add('flipped');
+    currentPage++;
+    
+    // --- ОНОВЛЮЄМО СТАН КНИГИ ---
+    updateBookState();
 }
-
-
-
- // Знаходимо поточну сторінку
-
- const pageToFlip = document.getElementById(`p${currentPage}`);
-
- // Робимо сторінку, що гортається, найвищою
-
- zIndexCounter++;
-
- pageToFlip.style.zIndex = zIndexCounter;
-
- // "Перегортаємо" її
-
- pageToFlip.classList.add('flipped');
-
- // Переходимо до наступної сторінки
-
- currentPage++;
-
-}
-
-
 
 function goPrevPage() {
+    // Перевіряємо, чи не перша це сторінка
+    if (currentPage <= 1) {
+        return;
+    }
 
-// Перевіряємо, чи не перша це сторінка
+    currentPage--;
+    const pageToUnflip = document.getElementById(`p${currentPage}`);
+    zIndexCounter++;
+    pageToUnflip.style.zIndex = zIndexCounter;
+    pageToUnflip.classList.remove('flipped');
 
-if (currentPage <= 1) {
-    return;
-}
-
-
-
-// Переходимо до попередньої сторінки
-
-currentPage--;
-
-// Знаходимо сторінку, яку треба "повернути"
-
-const pageToUnflip = document.getElementById(`p${currentPage}`);
-
-// Робимо сторінку, що повертається, найвищою
-
-zIndexCounter++;
-pageToUnflip.style.zIndex = zIndexCounter;
-
-// "Повертаємо" її
-
-pageToUnflip.classList.remove('flipped');
+    // --- ОНОВЛЮЄМО СТАН КНИГИ ---
+    updateBookState();
 }
