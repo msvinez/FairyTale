@@ -42,7 +42,14 @@ function buildSide(side, bookNum) {
     }
 
     if (side.text) {
-        let html = `<p><b>${side.text.join('<br>\n')}</b></p>`;
+        // Порожній рядок розділяє куплети на окремі <p> —
+        // так кожен куплет отримує свою заголовну літеру.
+        // Куплети загорнуті в один div, щоб вони лишались
+        // єдиним блоком і не розʼїжджались по центруванню.
+        const stanzas = side.text.join('\n').split('\n\n');
+        let html = '<div>' + stanzas
+            .map(stanza => `<p><b>${stanza.split('\n').join('<br>\n')}</b></p>`)
+            .join('') + '</div>';
         if (side.note) {
             html += `<p class="note">${side.note}</p>`;
         }
